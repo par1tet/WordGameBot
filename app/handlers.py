@@ -37,8 +37,10 @@ async def stop_game(message: Message):
     }
     with open('app/socia.json', 'w') as file:
         json.dump(add_data, file, indent='', ensure_ascii=False)
-    await message.answer("Игра окончена, если хотите продолжить то выберайте режим",
-                         reply_markup=kb.start)
+    with open('app/socia.json', 'r') as file:
+        data = json.loads(file)
+        await message.answer(f"Игра окончена, если хотите продолжить то выберайте режим\nКоличество слов: {data['using_words_pl']}",
+                            reply_markup=kb.start)
     
 @r.callback_query(F.data == 'firstpl')
 async def firstpl(cb: CallbackQuery):
@@ -97,12 +99,18 @@ async def firstpl_game(message: Message):
     print(message.text.upper())
     try:
         Russian_words[f'{message.text[0].upper()}'].index(message.text.upper())
+        
         with open('app/socia.json', 'r') as file:
             data = json.load(file)
             if message.text.upper() in data['using_words_pl']:
                 await message.answer('Ты уже это слово изпользовал')
                 return 0
-        
+            try:
+                if message.text.upper()[0] != last_letter(data['using_words_bt'][-1]):
+                    await message.answer('Не та буква')
+                    return 0
+            except:
+                pass
         with open('app/socia.json', 'r') as file:
             while True:
                 word_answer = Russian_words[f'{last_letter(message.text.upper())}'][random.randint(0,len(Russian_words[f'{last_letter(message.text.upper())}']))]
