@@ -100,7 +100,7 @@ async def firstpl_game(message: Message):
         with open('app/socia.json', 'r') as file:
             data = json.load(file)
             if message.text.upper() in data['using_words_pl']:
-                await message.answer('Ты уже это слово изпользовал, еблан')
+                await message.answer('Ты уже это слово изпользовал')
                 return 0
         
         with open('app/socia.json', 'r') as file:
@@ -130,7 +130,7 @@ async def firstpl_game(message: Message):
         await message.answer(text=f'{word_answer},\nВам на {last_letter(word_answer)}')
         
     except ValueError or KeyError:
-        word_answer = 'Нет такого слова, далбаеб'
+        word_answer = 'Нет такого слова'
         await message.answer(text=f'{word_answer}')
 
 def last_letter(word):
